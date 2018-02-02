@@ -1,0 +1,55 @@
+{% set name="lsf-drmaa" %}
+{% set version="1.11" %}
+
+package:
+  name: {{ name }}
+  version: {{ version }}
+
+source:
+  fn: {{ name }}-{{ version }}.tar.gz
+  url: https://github.com/IBMSpectrumComputing/lsf-drmaa/archive/v{{ version }}.tar.gz
+  sha256: 8ff8c17ee82f1bd00f83cc54a6ae66ca4822e937bc4f9c45494049c43ebde198
+
+build:
+  number: 0
+  skip: true  # [not linux]
+  script_env:
+    #######################################
+    # Source `profile.lsf` to set these.  #
+    #######################################
+
+    # EGO env vars
+    - EGO_CONFDIR
+    - EGO_TOP
+    - EGO_SERVERDIR
+    - EGO_LIBDIR
+    - EGO_LOCAL_CONFDIR
+    - EGO_ESRVDIR
+    - EGO_BINDIR
+
+    # LSF env vars
+    - LSF_SERVERDIR
+    - LSF_LIBDIR
+    - LSF_BINDIR
+    - LSF_ENVDIR
+
+requirements:
+  build:
+    - toolchain
+    - bison
+    - gperf
+    - libtool
+    - m4
+    - ragel
+
+test:
+  commands:
+    - test -f "${PREFIX}/include/drmaa.h"
+    - test -f "${PREFIX}/lib/libdrmaa.a"
+    - test -f "${PREFIX}/lib/libdrmaa${SHLIB_EXT}"
+
+about:
+  home: https://github.com/IBMSpectrumComputing/lsf-drmaa
+  license: GPL 3
+  license_file: COPYING
+  summary: "Fork of the original FedStage DRMAA for LSF created in 2008."
